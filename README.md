@@ -42,13 +42,13 @@ Example Output
 
 Sample message sent to GroupMe:
 
-🎉 Happy Birthday Rayleen Marquez, Ricardo Aidan Ortega! 🎂
+🎉 Happy Birthday john doe, jane smith! 🎂
 
 Console output when run:
 
 🔎 Today is: 01 01
-Row 1 → Rayleen Marquez has birthday on 01 01
- ✅ Match: Rayleen Marquez
+Row 1 → john doe has birthday on 01 01
+ ✅ Match: john doe
 ...
 
 Requirements
