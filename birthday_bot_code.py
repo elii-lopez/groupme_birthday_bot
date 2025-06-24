@@ -1,22 +1,50 @@
 import csv
-from datetime import datetime
 import os
 import requests
+from datetime import datetime
+from apscheduler.schedulers.blocking import BlockingScheduler
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv(dotenv_path="/Users/elii/Desktop/secretary_committee/.env")
+# Load environment variables (from Replit "Secrets" or a .env file if local)
+load_dotenv()
 
+# Get credentials from environment variables
 BOT_ID = os.getenv("GROUPME_BOT_ID")
+IMAGE_TOKEN = os.getenv("GROUPME_IMAGE_TOKEN")
 
-def send_message(text):
-    requests.post("https://api.groupme.com/v3/bots/post", json={
+
+# Function to send a message to GroupMe
+def send_message(text, image_url=None):
+    message_data = {
         "bot_id": BOT_ID,
-        "text": text
-    })
+        "text": text,
+    }
+    if image_url:
+        message_data["attachments"] = [{
+            "type": "image",
+            "url": image_url
+        }]
+    requests.post("https://api.groupme.com/v3/bots/post", json=message_data)
 
+
+# Function to upload image to GroupMe (optional)
+def upload_image(image_path):
+    headers = {"X-Access-Token": IMAGE_TOKEN}
+    with open(image_path, "rb") as img:
+        response = requests.post(
+            "https://image.groupme.com/pictures",
+            headers=headers,
+            files={"file": img}
+        )
+    if response.status_code == 200:
+        return response.json()["payload"]["picture_url"]
+    else:
+        print("❌ Image upload failed:", response.text)
+        return None
+
+# Function to check if today is anyone's birthday
 def check_birthdays():
-    today = datetime.now().strftime("%m %d")  # Format: 06 23
+    today = datetime.now().strftime("%m %d")  # Format: 06 24
     print("🔎 Today is:", today)
     names_today = []
 
@@ -30,14 +58,27 @@ def check_birthdays():
                 names_today.append(row["Name"])
 
     if names_today:
+        # Upload image once
+        image_url = upload_image("birthday_image.jpg")
+        print("✅ Uploaded Image URL:", image_url)
+
         names_str = ", ".join(names_today)
         message = f"🎉 Happy Birthday {names_str}! 🎂"
-        send_message(message)
+
+        # Send message with image if upload successful
+        if image_url:
+            send_message(message, image_url)
+        else:
+            send_message(message)
     else:
         print("⚠️ No birthdays matched today.")
 
-if __name__ == "__main__":
-    check_birthdays()
 
+# Set up the scheduler
+if __name__ == "__main__":
+    scheduler = BlockingScheduler()
+    scheduler.add_job(check_birthdays, 'cron', hour=14, minute=0)  # 2:00 PM every day
+    print("⏰ Scheduler started — waiting for 2:00 PM...")
+    scheduler.start()
 
 
