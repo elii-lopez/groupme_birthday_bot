@@ -37,3 +37,31 @@ Schedule it with cron:
 Connect with Me or Ask a Question:
 
 🔗 LinkedIn – [Elii Lopez](https://www.linkedin.com/in/elii-lopez-b41021298/)
+
+Example Output
+
+Sample message sent to GroupMe:
+
+🎉 Happy Birthday Rayleen Marquez, Ricardo Aidan Ortega! 🎂
+
+Console output when run:
+
+🔎 Today is: 01 01
+Row 1 → Rayleen Marquez has birthday on 01 01
+ ✅ Match: Rayleen Marquez
+...
+
+Requirements
+
+Install required packages using:
+
+pip install -r requirements.txt
+
+Your requirements.txt should include:
+
+python-dotenv
+requests
+
+License
+
+This project is open-source and available under the MIT License. Feel free to fork, modify, and contribute!
