@@ -5,6 +5,7 @@ from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from dotenv import load_dotenv
 
+print("✅ Birthday bot is running...", flush=True)
 # Load environment variables (from Replit "Secrets" or a .env file if local)
 load_dotenv()
 
@@ -75,10 +76,10 @@ def check_birthdays():
 
 
 # Set up the scheduler
+# Set up the scheduler or run manually
+# Run the birthday check manually
 if __name__ == "__main__":
-    scheduler = BlockingScheduler()
-    scheduler.add_job(check_birthdays, 'cron', hour=14, minute=0)  # 2:00 PM every day
-    print("⏰ Scheduler started — waiting for 2:00 PM...")
-    scheduler.start()
+    print("🚀 Running birthday check manually...")
+    check_birthdays()
 
 
